@@ -1,0 +1,67 @@
+_format_version: "3.0"
+
+services:
+  - name: userservice
+    url: http://userservice:9899
+    routes:
+      - name: user-route
+        paths:
+          - /user
+        strip_path: false
+
+  - name: expenseservice
+    url: http://expenseservice:9900
+    routes:
+      - name: expense-route
+        paths:
+          - /expense
+        strip_path: false
+
+
+  - name: dsservice
+    url: http://dsservice:5000
+    routes:
+      - name: ds-route
+        paths:
+          - /ds
+        strip_path: false
+
+
+  - name: authservice
+    url: http://authservice:9898
+    routes:
+      - name: auth-public-route
+        paths:
+          - /auth/signup
+          - /auth/login
+          - /auth/refresh
+        strip_path: false
+
+      - name: auth-protected-route
+        paths:
+          - /auth/v1
+        strip_path: false
+
+plugins:
+  - name: auth-check
+    service: userservice
+    config:
+      auth_service_url: http://authservice:9898
+      cache_ttl: 300
+      ssl_verify: false
+
+  - name: auth-check
+    service: expenseservice
+    config:
+      auth_service_url: http://authservice:9898
+      cache_ttl: 300
+      ssl_verify: false
+
+  - name: auth-check
+    service: dsservice
+    config:
+      auth_service_url: http://authservice:9898
+      cache_ttl: 300
+      ssl_verify: false
+
+
